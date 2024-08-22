@@ -6,17 +6,27 @@ using std::cin;
 using std::string;
 
 //initializing functions
-void makeStar();
+void makeStar(int size);
 void makeRectangle(int rows, int cols);
 void makeTriangle(int size);
 void makeRhombus(int size);
 void makeRightTriangle(int size);
 void makeLeftTriangle(int size);
 void makeHeart();
-void makeCXMtree(int size);
+void makeXMAtree(int size);
+
+//Function to get size, run the shape functions and to ask if the program should keep running
+void doWork(int &size, char & run, void (*func)(int)){
+    cout << "Enter Size: ";  
+    cin >> size;                                                                        
+    func(size);
+    cout << "Would you like to continue making Shapes? Y/N" << '\n';
+    cin >> run;
+}
+//Funciton to a triangle in the middle -sorta. 
 void triangleinhalf(int size){
     for(int i = 1; i <= size/2; i++){
-        for(int j = size - i; j > 0; j--){
+        for(int j = size/2 - i; j > 0; j--){
             cout << " ";
         }
         for(int k = 0; k < i; k++){
@@ -26,97 +36,102 @@ void triangleinhalf(int size){
     }
 }
 
+//Function to print the top and bottom edges
+ void top_n_bottom(int n){
+        std::cout << "#";
+    for (int i = 0; i < n*4; i++){
+        std::cout << "=";
+    }
+    std::cout << "#" << std::endl;
+    }
+
+//Function to print out the content in the rug
+void printRow(int spaces, int dots) {
+    std::cout << "|";
+    std::cout << std::string(spaces, ' ');
+    std::cout << "<>";
+    std::cout << std::string(dots, '.');
+    std::cout << "<>";
+    std::cout << std::string(spaces, ' ');
+    std::cout << "|" << std::endl;
+}
+
+//Function to print out a Lovely Rug
+void a_lovely_rug(int n) {
+    int spaces = (n * 2) - 2;
+    int dots = 0;
+
+    // Print the top part of the rug
+    top_n_bottom(n);
+
+    // Print the middle upper part of the rug
+    for (int i = 0; i < n; i++) {
+        printRow(spaces, dots);
+        dots += 4;
+        spaces -= 2;
+    }
+
+    // Print the middle lower part of the rug
+    for (int i = 0; i < n; i++) {
+        dots -= 4;
+        spaces += 2;
+        printRow(spaces, dots);
+    }
+
+    // Print the bottom part of the rug
+    top_n_bottom(n);
+}
+
+//Function to print out an x of stars
+void x_of_stars(int n) {
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (j == i || j == n - i - 1) {
+                std::cout << "*";
+            } else {
+                std::cout << " ";
+            }
+        }
+        std::cout << std::endl;
+    }
+}
+
 
 int main(){
 
     int rows, cols, size;
-    bool run = true;
-    string pattern;
+    char run = 'Y';
+    string shape;
 
+    cout << "----- WELCOME TO SHAPE BUILDER -----" << "\n";
 
-    cout << "----- WELCOME TO PATTERN BUILDER -----" << "\n";
+    while(run == 'Y'){
+     cout << "What Shape Would You Like?\n(S) for Star\n(T) for Triangle\n(RT) for Right Triangle\n(LT) for Left Triangle\n(H) for Heart\n(RB) for Rhombus\n(REC) for Rectangle\n(RUG) for a Lovely Rug\n(X) for an X\n";
+        cin >> shape;
 
-    cout << "What Pattern Would You Like?" << '\n';
-
-    while(run){
-        cout << "(S) for Star" << '\n' << 
-        "(T) for Triangle" << '\n' << 
-        "(RT) for Rigth Triangle" << '\n' <<
-        "(LT) for Left Triangle" << '\n' <<
-        "(H) for Heart" << '\n' <<
-        "(RB) for Rhombus" << '\n' <<
-        "(REC) for Rectangle" << '\n';
-
-        cin >> pattern;
-        //Star pattern
-        if(pattern == "S"){
-            run = false; 
-        }
-        //Triangle pattern
-        else if(pattern == "T"){
-            cout << "Enter Size: ";                                                                         
-            cin >> size;
-            makeTriangle(size);
-            run = false;
-        }
-        //Right Triangle pattern
-        else if(pattern == "RT"){
-            cout << "Enter Size: ";                                                                         
-            cin >> size;
-            makeRightTriangle(size);
-
-            run = false;
-        }
-        //Left Trianlge pattern
-        else if(pattern == "LT"){
-            cout << "Enter Size: ";                                                                         
-            cin >> size;
-            makeLeftTriangle(size);
-
-            run = false;
-        }
-        //Heart pattern
-        else if(pattern == "H"){
-            run = false;
-        }
-        //Rhombus pattern
-        else if(pattern == "RB"){
-            cout << "Enter Size: ";                                                                         
-            cin >> size;
-            makeRhombus(size);
-
-            run = false;
-        }
-        //Rectangle Pattern
-        else if(pattern == "REC"){
-            cout << "Enter Rows: ";
-            cin >> rows;
-            cout << "Enter Columns: ";
-            cin >> cols;
-            cout << '\n';
+        if (shape == "S") doWork(size, run, &makeStar);
+        else if (shape == "T") doWork(size, run, &makeTriangle);
+        else if (shape == "RT") doWork(size, run, &makeRightTriangle);
+        else if (shape == "LT") doWork(size, run, &makeLeftTriangle);
+        else if (shape == "H") cout << "Would you like to continue making Shapes? Y/N\n", cin >> run;
+        else if (shape == "RB") doWork(size, run, &makeRhombus);
+        else if (shape == "REC") {
+            cout << "Enter Rows: ", cin >> rows, cout << "Enter Columns: ", cin >> cols;
             makeRectangle(rows, cols);
-
-            run = false;
-
+            cout << "Would you like to continue making Shapes? Y/N\n", cin >> run;
         }
-        else if(pattern == "CXM"){
-            cout << "Enter Size: ";                                                                         
-            cin >> size;
-            makeCXMtree(size);
-
-            run = false;
-        }
-        else{
-            cout << "******THIS IS NOT A PATTERN, PLEASE ENTER AGAIN******" << '\n';
-        }
+        else if (shape == "XMA") doWork(size, run, &makeXMAtree);
+        else if (shape == "RUG") doWork(size, run, &a_lovely_rug);
+        else if (shape == "X") doWork(size, run, &x_of_stars);
+        else cout << "******THIS IS NOT A shape, PLEASE ENTER AGAIN******\n";
     }
 
-    cout << "---------------------------------------";
+    cout << "-----------------------------------------------------";
 
     return 0;
 }
 
-void makeCXMtree(int size){
+void makeXMAtree(int size){
     triangleinhalf(size);
     triangleinhalf(size);
     triangleinhalf(size);
@@ -131,7 +146,60 @@ void makeCXMtree(int size){
 }
 
 
-void makeStar(){
+void makeStar(int size){
+for(int i = 1; i <= size; ++i){
+        for(int j = 1; j < 2*(size+2); ++j){
+            cout << " ";
+        }
+        for(int sp = size; sp > i; --sp){
+            cout << " ";
+        }
+        for(int ast = 1; ast <= i; ++ast){
+            cout << "* ";
+        }
+        cout << '\n';
+    }
+
+    for(int r = 1; r <= (size+3)/2; ++r){
+
+        for(int sp = 1; sp <= 3*(r-1)+1; ++sp){
+            cout << " ";
+        }
+        for(int ast = 3*(size+1); ast >= 3*(r-1) +1; --ast){
+            cout << "* ";
+        }
+        cout << "\n";
+    }
+
+    for(int r =1; r <= size/2-1; ++r){
+        for(int sp = 3*(size+1)/2; sp >= r; --sp){
+            cout << " ";
+        }
+        for(int ast = 1; ast <= (3*size+3)/2 + r; ++ast){
+            cout << "* ";
+        }
+        cout << '\n';
+    }
+
+    for(int r=1; r<= (size+1)/2; ++r){
+
+        for(int sp =(2*size+7)/2; sp >=r; --sp){
+            cout << " ";
+        }
+
+        for(int ast = size; ast > 2*(r-1); --ast){
+            cout << "* ";
+        }
+
+        for(int sp = 1; sp <= 10*(r-1)+2; ++sp){
+            cout << " ";
+        }
+
+        for(int ast = size; ast > 2*(r-1); --ast){
+            cout << "* ";
+        }
+        cout << '\n';
+    }
 
 }
 //Fucntion to print Rectangle
@@ -158,13 +226,13 @@ void makeTriangle(int size){
 }
 
 void makeRhombus(int size){
-    triangleinhalf(size*2);
-    
-    for(int i = 1; i < size/2; i++){
-        for(int j = 1; j < i; j++){
+    triangleinhalf(size);
+
+    for(int i = 1; i <= (size/2) - 1; i++){
+        for(int j = 0; j < i; j++){
             cout << " ";
         }
-        for(int k = size; k > 1; k--){
+        for(int k = 0; k < (size/2) - i; k++){
             cout << "* ";
         }
         cout << '\n';
